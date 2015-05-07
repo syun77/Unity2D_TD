@@ -8,10 +8,10 @@ public class WaveStart : TextObj
   // ②状態定数
   enum eState
   {
-    Appear,   // 出現
-    Wait,     // 停止
-    Disapper, // 退出
-    End,      // おしまい
+    Appear,    // 出現
+    Wait,      // 停止
+    Disappear, // 退出
+    End,       // おしまい
   }
 
   /// ③座標の定数
@@ -70,11 +70,11 @@ public class WaveStart : TextObj
         if (_timer < 1)
         {
           _timer = OFFSET_X;
-          _state = eState.Disapper;
+          _state = eState.Disappear;
         }
         break;
 
-      case eState.Disapper:
+      case eState.Disappear:
         // ⑨退出中
         _timer *= 0.9f;
         X = CENTER_X + (OFFSET_X - _timer);
