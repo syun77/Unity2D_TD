@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 /// ①Wave開始演出クラス
@@ -18,7 +18,7 @@ public class WaveStart : TextObj
   // 中心座標(X)
   const float CENTER_X = 0;
   // 中心からのオフセット座標(X)
-  const float OFFSET_X = 500;
+  const float OFFSET_X = 600;
 
   /// ④状態とタイマー
   // 状態
