@@ -16,9 +16,9 @@ public class WaveStart : TextObj
 
   /// ③座標の定数
   // 中心座標(X)
-  const float CENTER_X = 338;
+  const float CENTER_X = 0;
   // 中心からのオフセット座標(X)
-  const float OFFSET_X = 600;
+  const float OFFSET_X = 500;
 
   /// ④状態とタイマー
   // 状態

@@ -8,6 +8,14 @@ using UnityEngine.UI;
 /// </summary>
 public class TextObj : MonoBehaviour {
 
+    
+  /// RectTransform
+  RectTransform _rectTransform = null;
+  public RectTransform RectTrans
+  {
+    get { return _rectTransform ?? ( _rectTransform = GetComponent<RectTransform>()); }
+  }
+  
   /// uGUI Text
   Text _text = null;
   public Text UiText
@@ -42,12 +50,12 @@ public class TextObj : MonoBehaviour {
   /// <value>The x.</value>
   public float X
   {
-    get { return transform.position.x; }
+    get { return RectTrans.localPosition.x; }
     set
     {
-      Vector3 p = transform.position;
+      Vector3 p = RectTrans.localPosition;
       p.x = value;
-      transform.position = p;
+      transform.localPosition = p;
     }
   }
 
@@ -57,12 +65,12 @@ public class TextObj : MonoBehaviour {
   /// <value>The y.</value>
   public float Y
   {
-    get { return transform.position.y; }
+    get { return RectTrans.localPosition.y; }
     set
     {
-      Vector3 p = transform.position;
+      Vector3 p = RectTrans.localPosition;
       p.y = value;
-      transform.position = p;
+      RectTrans.localPosition = p;
     }
   }
 
@@ -73,9 +81,9 @@ public class TextObj : MonoBehaviour {
   /// <param name="y">The y coordinate.</param>
   public void SetPosition(float x, float y)
   {
-    Vector3 p = transform.position;
+    Vector3 p = RectTrans.localPosition;
     p.Set(x, y, p.z);
-    transform.position = p;
+    RectTrans.localPosition = p;
   }
 
   /// <summary>
@@ -85,10 +93,10 @@ public class TextObj : MonoBehaviour {
   /// <param name="y">The y coordinate.</param>
   public void AddPosition(float x, float y)
   {
-    Vector3 p = transform.position;
+    Vector3 p = RectTrans.localPosition;
     p.x += x;
     p.y += y;
-    transform.position = p;
+    RectTrans.localPosition = p;
 
   }
 
