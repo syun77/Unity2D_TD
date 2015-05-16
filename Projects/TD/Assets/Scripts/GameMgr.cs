@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; // この追加を忘れない
+using System.Collections.Generic;
 
 /// ゲーム管理
 public class GameMgr : MonoBehaviour
@@ -24,7 +24,7 @@ public class GameMgr : MonoBehaviour
   {
     None, // なし
     Buy, // 購入モード
-    Upgrade, // アップグレード (※ここを追加)
+    Upgrade, // アップグレード
   }
   eSelMode _selMode = eSelMode.None;
 
@@ -33,10 +33,10 @@ public class GameMgr : MonoBehaviour
   // 選択中のタワー
   Tower _selTower = null;
 
-  // 出現タイマー
-  int _tAppear = 0;
-  // パス
-  List<Vec2D> _path;
+	// 出現タイマー
+	int _tAppear = 0;
+	// パス
+	List<Vec2D> _path;
   // カーソル
   Cursor _cursor;
   // コリジョンレイヤー
@@ -50,13 +50,13 @@ public class GameMgr : MonoBehaviour
   // 射程範囲
   CursorRange _cursorRange;
 
-  void Start()
-  {
-    // ゲームパラメータ初期化
+	void Start ()
+	{
+    // ゲームパラメータ初期化 
     Global.Init();
 
-    // 敵管理を生成
-    Enemy.parent = new TokenMgr<Enemy>("Enemy", 128);
+		// 敵管理を生成
+		Enemy.parent = new TokenMgr<Enemy>("Enemy", 128);
     // ショット管理を生成
     Shot.parent = new TokenMgr<Shot>("Shot", 128);
     // パーティクル管理を生成
@@ -64,16 +64,17 @@ public class GameMgr : MonoBehaviour
     // タワー管理を生成
     Tower.parent = new TokenMgr<Tower>("Tower", 64);
 
-    // マップ管理を生成
-    // プレハブを取得
-    GameObject prefab = null;
-    prefab = Util.GetPrefab(prefab, "Field");
-    // インスタンス生成
-    Field field = Field.CreateInstance2<Field>(prefab, 0, 0);
-    // マップ読み込み
-    field.Load();
-    // パスを取得
-    _path = field.Path;
+		// マップ管理を生成
+		// プレハブを取得
+		GameObject prefab = null;
+		prefab = Util.GetPrefab(prefab, "Field");
+		// インスタンス生成
+		Field field = Field.CreateInstance2<Field>(prefab, 0, 0);
+		// マップ読み込み
+		field.Load();
+		// パスを取得
+		_path = field.Path;
+
     // コリジョンレイヤーを取得
     _lCollision = field.lCollision;
 
@@ -94,29 +95,30 @@ public class GameMgr : MonoBehaviour
 
     // 初期状態は選択しないモード
     ChangeSelMode(eSelMode.None);
-  }
+	}
 
-  void Update()
-  {
+	void Update()
+	{
     // GUIを更新
     _gui.Update(_selMode, _selTower);
+
 
     // カーソルを更新
     _cursor.Proc(_lCollision);
 
+    // メインの更新
     switch (_state)
     {
       case eState.Wait:
-        // Wave開始
-        _tWait -= Time.deltaTime;
-        if(_tWait < 0)
-        {
-          _enemyGenerator.Start(Global.Wave);
-          // Wave開始演出を呼び出す
-          _waveStart.Begin(Global.Wave);
-          // メイン状態に遷移する
-          _state = eState.Main;
-        }
+      _tWait -= Time.deltaTime;
+      if(_tWait < 0)
+      {
+        _enemyGenerator.Start(Global.Wave);
+        // Wave開始演出を呼び出す (※ここを追加)
+        _waveStart.Begin(Global.Wave);
+        // メイン状態に遷移する
+        _state = eState.Main;
+      }
         break;
 
       case eState.Main:
@@ -139,10 +141,11 @@ public class GameMgr : MonoBehaviour
           // Waveをクリアした
           // 次のWaveへ
           Global.NextWave();
-          // 停止タイマー設定 (※ここを追加)
+          // 停止タイマー設定
           _tWait = TIMER_WAIT;
           _state = eState.Wait;
         }
+
         break;
 
       case eState.Gameover:
@@ -154,7 +157,7 @@ public class GameMgr : MonoBehaviour
 
         break;
     }
-  }
+	}
 
   // 更新・メイン
   void UpdateMain()
@@ -218,12 +221,48 @@ public class GameMgr : MonoBehaviour
     }
   }
 
+  /// Waveをクリアしたかどうか
+  bool IsWaveClear()
+  {
+    if (_enemyGenerator.Number > 0)
+    {
+      // 敵がまだ出現する
+      return false;
+    }
+
+    if (Enemy.parent.Count() > 0)
+    {
+      // 敵が存在するのでクリアしていない
+      return false;
+    }
+
+    // クリアした
+    return true;
+  }
+
   /// 購入ボタンをクリックした
   public void OnClickBuy()
   {
     // 購入モードにする
     ChangeSelMode(eSelMode.Buy);
+  }
 
+  /// アップグレード・射程範囲をクリックした
+  public void OnClickRange()
+  {
+    ExecUpgrade(Tower.eUpgrade.Range);
+  }
+
+  /// アップグレード・連射速度をクリックした
+  public void OnClickFirerate()
+  {
+    ExecUpgrade(Tower.eUpgrade.Firerate);
+  }
+
+  /// アップグレード・攻撃威力をクリックした
+  public void OnClickPower()
+  {
+    ExecUpgrade(Tower.eUpgrade.Power);
   }
 
   /// 選択モードの変更
@@ -271,25 +310,6 @@ public class GameMgr : MonoBehaviour
     _selMode = mode;
   }
 
-  /// Waveをクリアしたかどうか
-  bool IsWaveClear()
-  {
-    if (_enemyGenerator.Number > 0)
-    {
-      // 敵がまだ出現する
-      return false;
-    }
-
-    if (Enemy.parent.Count() > 0)
-    {
-      // 敵が存在するのでクリアしていない
-      return false;
-    }
-
-    // クリアした
-    return true;
-  }
-
   /// アップグレードボタンの表示・非表示を切り替え
   void SetActiveUpgrade(bool b)
   {
@@ -312,23 +332,5 @@ public class GameMgr : MonoBehaviour
 
     // 射程範囲カーソルの大きさを反映
     _cursorRange.SetVisible(true, _selTower.LvRange);
-  }
-
-  /// アップグレード・射程範囲をクリックした
-  public void OnClickRange()
-  {
-    ExecUpgrade(Tower.eUpgrade.Range);
-  }
-
-  /// アップグレード・連射速度をクリックした
-  public void OnClickFirerate()
-  {
-    ExecUpgrade(Tower.eUpgrade.Firerate);
-  }
-
-  /// アップグレード・攻撃威力をクリックした
-  public void OnClickPower()
-  {
-    ExecUpgrade(Tower.eUpgrade.Power);
   }
 }

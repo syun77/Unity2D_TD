@@ -7,7 +7,7 @@ public class Global
   /// 初期化
   public static void Init()
   {
-    _wave = 1; // ←※ここを追加
+    _wave = 1;
     _money = MONEY_INIT;
     // ライフ初期化
     _life = LIFE_INIT;
@@ -35,6 +35,7 @@ public class Global
       _money = 0;
     }
   }
+
   /// ライフ
   // 初期値
   const int LIFE_INIT = 3;
@@ -54,6 +55,7 @@ public class Global
       _life = 0;
     }
   }
+
   /// Wave数
   static int _wave = 1;
   public static int Wave

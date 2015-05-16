@@ -12,7 +12,7 @@ public class Enemy : Token
   public static Enemy Add(List<Vec2D> path)
   {
     Enemy e = parent.Add(0, 0);
-    if (e == null)
+    if(e == null)
     {
       return null;
     }
@@ -20,18 +20,18 @@ public class Enemy : Token
     return e;
   }
 
-  // アニメーション用のスプライト
-  public Sprite spr0;
-  public Sprite spr1;
+	// アニメーション用のスプライト
+	public Sprite spr0;
+	public Sprite spr1;
 
   // HP
   int _hp;
 
-  // 所持金 (※ここを追加する)
+  // 所持金
   int _money;
 
-  // アニメーションタイマー
-  int _tAnim = 0;
+	// アニメーションタイマー
+	int _tAnim = 0;
 
   // 速度パラメータ
   float _speed = 0; // 速度
@@ -43,6 +43,14 @@ public class Enemy : Token
   // チップ座標
   Vec2D _prev; // 1つ前
   Vec2D _next; // 1つ先
+
+  /// 画像の角度を更新
+  void UpdateAngle()
+  {
+    float dx = _next.x - _prev.x;
+    float dy = _next.y - _prev.y;
+    Angle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
+  }
 
   /// 初期化
   public void Init(List<Vec2D> path)
@@ -66,27 +74,26 @@ public class Enemy : Token
     // HPを設定する
     _hp = EnemyParam.Hp();
 
-    // 所持金を設定 (※ここを追加)
+    // 所持金を設定
     _money = EnemyParam.Money();
   }
 
-  // アニメーション更新
-  void FixedUpdate()
-  {
-    _tAnim++;
-    if (_tAnim % 32 < 16)
-    {
-      SetSprite(spr0);
-    }
-    else
-    {
-      SetSprite(spr1);
-    }
+	// アニメーション更新
+	void FixedUpdate()
+	{
+		_tAnim++;
+		if(_tAnim%32 < 16)
+		{
+			SetSprite(spr0);
+		}
+		else
+		{
+			SetSprite(spr1);
+		}
 
     // 速度タイマー更新
     _tSpeed += _speed;
-    if (_tSpeed >= 100.0f)
-    {
+    if(_tSpeed >= 100.0f) {
       // 移動先を次に進める
       _tSpeed -= 100.0f;
       MoveNext();
@@ -96,22 +103,22 @@ public class Enemy : Token
     X = Mathf.Lerp(_prev.x, _next.x, _tSpeed / 100.0f);
     Y = Mathf.Lerp(_prev.y, _next.y, _tSpeed / 100.0f);
 
-    // 画像の角度を更新 (※ここを追加)
+    // 画像の角度を更新
     UpdateAngle();
-
-  }
+	}
 
   /// 次の移動先に進める
   void MoveNext()
   {
-    if (_pathIdx >= _path.Count)
+    if(_pathIdx >= _path.Count)
     {
-      // ⑨ゴールにたどりついた
+      // ゴールにたどりついた
       _tSpeed = 100.0f;
       // ダメージを与える
       Global.Damage();
       // 自爆する
       Vanish();
+
       return;
     }
     // ⑧移動先を移動元にコピーする
@@ -125,20 +132,12 @@ public class Enemy : Token
     _pathIdx++;
   }
 
-  /// 画像の角度を更新
-  void UpdateAngle()
-  {
-    float dx = _next.x - _prev.x;
-    float dy = _next.y - _prev.y;
-    Angle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
-  }
-
   /// 衝突判定
   void OnTriggerEnter2D(Collider2D other)
   {
-    // レイヤー名を取得する(①)
+    // レイヤー名を取得する
     string name = LayerMask.LayerToName(other.gameObject.layer);
-    if (name == "Shot")
+    if(name == "Shot")
     {
       // ショットと衝突
       Shot s = other.gameObject.GetComponent<Shot>();
@@ -146,7 +145,6 @@ public class Enemy : Token
       s.Vanish();
 
       // ダメージ処理をする
-      //Damage(1);
       Damage(s.Power);
 
       if (Exists == false)
@@ -162,7 +160,7 @@ public class Enemy : Token
   {
     // HPを減らす
     _hp -= val;
-    if (_hp <= 0)
+    if(_hp <= 0)
     {
       // HPがなくなったので死亡
       Vanish();
@@ -177,7 +175,7 @@ public class Enemy : Token
     {
       // 生存時間は30フレーム。移動はしない
       Particle p = Particle.Add(Particle.eType.Ring, 30, X, Y, 0, 0);
-      if (p)
+      if(p)
       {
         // 明るい緑
         p.SetColor(0.7f, 1, 0.7f);
@@ -186,7 +184,7 @@ public class Enemy : Token
 
     // ボールエフェクト生成
     float dir = Random.Range(35, 55);
-    for (int i = 0; i < 8; i++)
+    for(int i = 0; i < 8; i++)
     {
       // 消滅フレーム数
       int timer = Random.Range(20, 40);
@@ -195,7 +193,7 @@ public class Enemy : Token
       Particle p = Particle.Add(Particle.eType.Ball, timer, X, Y, dir, spd);
       // 移動方向
       dir += Random.Range(35, 55);
-      if (p)
+      if(p)
       {
         // 緑色を設定
         p.SetColor(0.0f, 1, 0.0f);
@@ -207,4 +205,5 @@ public class Enemy : Token
     // 親の消滅処理を呼び出す
     base.Vanish();
   }
+
 }

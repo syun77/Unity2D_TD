@@ -17,14 +17,13 @@ public class Cursor : Token
     get { return _selObj; }
   }
 
-  // 配置可能かどうか (②)
+  // 配置可能かどうか
   bool _bPlaceable = true;
   public bool Placeable
   {
     get { return _bPlaceable; }
-    set
-    {
-      if (value)
+    set {
+      if(value)
       {
         // 配置できるので四角
         SetSprite(sprRect);
@@ -39,7 +38,6 @@ public class Cursor : Token
   }
 
   /// 更新
-  //public void Proc()
   public void Proc(Layer2D lCollision)
   {
     // マウス座標を取得する
@@ -60,7 +58,7 @@ public class Cursor : Token
     // 領域外かどうかチェック
     Visible = (lCollision.IsOutOfRange(i, j) == false);
 
-    // 選択しているオブジェクトを設定 (※ここを追加)
+    // 選択しているオブジェクトを設定
     SetSelObj();
   }
 
@@ -71,7 +69,7 @@ public class Cursor : Token
     int mask = 1 << LayerMask.NameToLayer("Tower");
     Collider2D col = Physics2D.OverlapPoint(GetPosition(), mask);
     _selObj = null;
-    if (col != null)
+    if(col != null)
     {
       // 選択中のオブジェクトを格納
       _selObj = col.gameObject;

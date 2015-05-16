@@ -39,7 +39,7 @@ public class EnemyGenerator
   /// ④更新
   public void Update()
   {
-    if (_number <= 0)
+    if(_number <= 0)
     {
       // ⑧すべての敵が出現したので何もしない
       return;
@@ -48,7 +48,7 @@ public class EnemyGenerator
     // ⑤経過時間を足し込む
     _tInterval += Time.deltaTime;
     // ⑥経過時間をチェック
-    if (_tInterval >= _interval)
+    if(_tInterval >= _interval)
     {
       // インターバルを超えたので敵出現
       _tInterval -= _interval;

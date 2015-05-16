@@ -46,10 +46,9 @@ public class Gui
   /// 更新
   public void Update(GameMgr.eSelMode selMode, Tower tower)
   {
-    // Wave数を更新 (※ここを追加)
+    // Wave数を更新
     _txtWave.SetLabelFormat("Wave: {0}", Global.Wave);
     _txtMoney.SetLabelFormat("Money: ${0}", Global.Money);
-
     // 生産コストを取得する
     int cost = Cost.TowerProduction();
     _txtCost.Label = "";
@@ -62,7 +61,6 @@ public class Gui
     _btnBuy.Enabled = (Global.Money >= cost);
     // 購入コストを表示する
     _btnBuy.FormatLabel("Buy (${0})", cost);
-
     // ライフ表示
     for (int i = 0; i < Global.LIFE_MAX; i++)
     {
