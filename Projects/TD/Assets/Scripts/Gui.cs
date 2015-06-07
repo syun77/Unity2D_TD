@@ -72,7 +72,7 @@ public class Gui
     {
       // 選択しているタワーの情報を表示する
       _txtTowerInfo.SetLabelFormat(
-        "<<Infantry Info>>\n  Range: Lv{0}\n  Firerate: Lv{1}\n  Power: Lv{2}",
+        "<<Tower Info>>\n  Range: Lv{0}\n  Firerate: Lv{1}\n  Power: Lv{2}",
         tower.LvRange,
         tower.LvFirerate,
         tower.LvPower
